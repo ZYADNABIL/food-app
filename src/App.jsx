@@ -2,7 +2,7 @@
 import './App.css'
 import { Routes ,Route, createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AuthLayout from './modules/shared/components/AuthLayout/AuthLayout'
-import Login from './modules/authentication/components/login/login'
+import Login from './modules/authentication/components/Login/Login'
 import Registeration from './modules/authentication/components/registeration/registeration'
 import ForgetPass from './modules/authentication/components/forgetPass/ForgetPass'
 import ChangePass from './modules/authentication/components/changePass/ChangePass'
@@ -16,7 +16,17 @@ import CategoriesList from './modules/categories/components/categoriesList/Categ
 import CategoriesData from './modules/categories/components/categoriesData/CategoriesData'
 import UsersList from './modules/users/components/usersList/UsersList'
 import { ToastContainer } from 'react-toastify'
+import { useState } from 'react'
+import { jwtDecode } from 'jwt-decode'
+import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute'
 function App() {
+
+ const [loginData, setLoginData] = useState(null)
+ const saveLoginData = () =>{
+      let encodedToken = localStorage.getItem("token")
+      let decodedToken = jwtDecode(encodedToken)
+      setLoginData(decodedToken)
+ }
 
   const routes = createBrowserRouter([
 
@@ -25,8 +35,8 @@ function App() {
       element:<AuthLayout/>,
       errorElement: <NotFound/>,
       children:[
-        {index:true,element:<Login/>},
-        {path:'login', element:<Login/>},
+        {index:true,element:<Login saveLoginData={saveLoginData}/>},
+        {path:'login', element:<Login saveLoginData={saveLoginData}/>},
         {path:'register', element:<Registeration/>},
         {path:'forget-pass', element:<ForgetPass/>},
         {path:'change-pass', element:<ChangePass/>},
@@ -35,7 +45,10 @@ function App() {
     },
     {
       path:'Dashboard',
-      element:<MasterLayout/>,
+      element:
+      <ProtectedRoute>
+        <MasterLayout/>
+      </ProtectedRoute>,
       errorElement:<NotFound/>,
       children:[
       {index:true,element:<Dashboard/>},
