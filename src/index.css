@@ -6,3 +6,35 @@
 .bg-overlay{
     background: linear-gradient(45deg,rgba(47, 140, 96, 0.63),rgba(0, 0, 0, 0.62));
 }
+
+.sidebar-container .ps-sidebar-container{
+    background-color: #1F263E;
+    height: 100vh;
+    width: 100%;
+    border-radius: 0px 70px 0px 0px;
+    overflow: hidden;
+}
+.sidebar-container .ps-menu-button{
+    color: white !important;
+    
+}
+.sidebar-container .ps-menu-button:hover{
+    background-color: #0092471A !important  ;
+
+}
+
+.sidebar-container .menu-logo {
+    background-color: transparent !important;
+   
+}
+.sidebar-container .menu-logo:hover {
+    background-color: transparent !important;
+}
+.avatar{
+    background-color: rgb(245, 207, 157);
+    border-radius: 50%;
+}
+.header-container{
+    background-color: #009247;
+    
+}
