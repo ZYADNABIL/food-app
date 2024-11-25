@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { axiosInstance, USERS_URLS } from '../../../../services/Urls/urls'
+import { EMAIL_VALIDATION, PASSWORD_VALIDATION } from '../../../../services/validation'
 export default function Login({saveLoginData}) {
   let navigate = useNavigate()
   let {
@@ -14,7 +16,7 @@ export default function Login({saveLoginData}) {
   } = useForm()
   const onSubmit = async (data) =>{
     try {
-      let response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Login',data);
+      let response = await axiosInstance.post(USERS_URLS.LOGIN,data);
       toast.success("Login successful!");
       localStorage.setItem("token",response.data.token);
       saveLoginData()
@@ -47,13 +49,7 @@ export default function Login({saveLoginData}) {
                        placeholder="Enter your E-mail" 
                        aria-label="Email" 
                        aria-describedby="basic-addon1"
-                       {...register("email",{
-                        required :"Email is required",
-                        pattern: {
-                          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                          message:"Email isn't valid",
-                        }                        
-                       })}
+                       {...register("email",EMAIL_VALIDATION)}
                        />
               </div>
               {errors.email &&(
@@ -68,9 +64,7 @@ export default function Login({saveLoginData}) {
                        placeholder="Password"
                        aria-label="password"
                        aria-describedby="basic-addon1"
-                       {...register("password",{
-                        required :"Password is required",                     
-                       })}
+                       {...register("password",PASSWORD_VALIDATION)}
                        />
               </div>
               {errors.password &&(

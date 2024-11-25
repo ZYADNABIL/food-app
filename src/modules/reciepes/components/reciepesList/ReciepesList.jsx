@@ -6,9 +6,11 @@ import defaultImg  from '../../../../assets/imgs/freepik--Character--inject-70.p
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import modalPhoto from '../../../../assets/imgs/freepik--Character--inject-70.png'
+import DeleteConfirmation from '../../../shared/components/Deleteconfirmation/DeleteConfirmation'
 import { toast } from 'react-toastify'
+import { axiosInstance, imageUrl, RECIEPE_URLS } from '../../../../services/Urls/urls'
+import NoData from '../../../shared/components/Nodata/NoData'
 
-export const imageUrl = 'https://upskilling-egypt.com:3006' ;  
 export default function ReciepesList() {
   const [reciepes, setReciepes] = useState([])
   const [show, setShow] = useState(false);
@@ -20,11 +22,7 @@ export default function ReciepesList() {
   } 
   let getReciepeList = async () =>{
       try {
-        let response = await axios.get('https://upskilling-egypt.com:3006/api/v1/Recipe/?pageSize=10&pageNumber=1',
-          {
-            headers : {Authorization:localStorage.getItem('token')}
-          }
-        )
+        let response = await axiosInstance.get(RECIEPE_URLS.GET_RECIEPES,{params:{pageSize:10,pageNumber:1}})
         setReciepes(response.data.data)
       } catch (error) {
         console.log(error);
@@ -32,13 +30,10 @@ export default function ReciepesList() {
   }
   let deleteReciepe = async () =>{
       try {
-        let response = await axios.delete(`https://upskilling-egypt.com:3006/api/v1/Recipe/${selectedId}` , 
-          {
-            headers: {Authorization: localStorage.getItem('token')}
-          }
+        let response = await axiosInstance.delete(RECIEPE_URLS.DELETE_RECIEPE(selectedId) , 
         )
         getReciepeList()
-        toast.success('success')
+        toast.success("deleted successfully")
       } catch (error) {
         console.log(error);
         toast.error(error)
@@ -51,14 +46,14 @@ export default function ReciepesList() {
   return (
     <>
     <Header title={"Reciepes"} description={"You can now add your items that any user can order it from the Application and you can edit"} />
-    <div className='d-flex justify-content-between align-items-center p-4'>
+    <div className='d-flex mx-5 justify-content-between align-items-center p-4'>
       <h5>Reciepes Table details</h5>
       <button className="btn btn-success">Add New Reciepe</button>
     </div>
-    <div className="p-4">
-    <table className="table">
-      <thead>
-        <tr>
+    <div className="p-4 mx-5">
+      {reciepes.length > 0 ?  <table className="table table-striped rounded-4">
+      <thead >
+        <tr className=''>
           <th scope="col">Id</th>
           <th scope="col">Name</th>
           <th scope="col">Image</th>
@@ -70,7 +65,7 @@ export default function ReciepesList() {
       </thead>
       <tbody>
         {reciepes.map(reciepe =>
-          <tr key={reciepe.id}>
+          <tr key={reciepe.id} className='mt-4'>
             <th scope="row">{reciepe.id}</th>
             <td>{reciepe.name}</td>
             <td>
@@ -95,27 +90,10 @@ export default function ReciepesList() {
           </tr>
         )}
       </tbody>
-    </table>
+    </table> : <NoData/>}
+   
     </div>
-    <Modal show={show} onHide={handleClose} className='d-flex justify-content-center align-items-center'>
-      <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className='d-flex justify-content-center align-items-center flex-column'>
-        <img src={modalPhoto} alt="" />
-        <div className='text-center'>
-        <h5>Delete This Item ?</h5>
-        <p>are you sure you want to delete this item ? if you are sure just click on delete it</p>
-        </div>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="danger" onClick={deleteReciepe}>
-          Delete this item
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <DeleteConfirmation deleteItem={"Reciepe"} deleteFunction={deleteReciepe} show={show} handleClose={handleClose}/>
   </>
   )
 }

@@ -3,13 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import modalPhoto from '../../../../assets/imgs/freepik--Character--inject-70.png'
 import { useState } from 'react';
-export default function DeleteConfirmation({deleteItem,deleteFunction,showState}) {
-  const [show, setShow] = useState(false);
-  const handleClose = () => showState(false);
-  const handleShow = (id) => {
-    // setSelectedId(id);
-    showState()
-  } 
+export default function DeleteConfirmation({show,handleClose,deleteItem,deleteFunction}) {
   return (
     <Modal show={show} onHide={handleClose} className='d-flex justify-content-center align-items-center'>
         <Modal.Header closeButton>
@@ -26,7 +20,7 @@ export default function DeleteConfirmation({deleteItem,deleteFunction,showState}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="danger" onClick={deleteFunction}>
-            Delete this item
+            Delete this {deleteItem}
           </Button>
         </Modal.Footer>
       </Modal>

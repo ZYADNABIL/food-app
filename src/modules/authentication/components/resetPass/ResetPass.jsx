@@ -1,15 +1,22 @@
 import React from 'react'
 import logo from '../../../../assets/imgs/logo.png'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react' 
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios'
+import { USERS_URLS } from '../../../../services/Urls/urls';
+import { CONFIRM_PASSWORD, EMAIL_VALIDATION, OTP_VALIDATION, PASSWORD_VALIDATION } from '../../../../services/validation';
 export default function ResetPass() {
   let navigate = useNavigate()
-  let {register,formState:{errors},handleSubmit} = useForm()
+  const location = useLocation()
+  const [isPawwordVisible, setIsPawwordVisible] = useState(false)
+  console.log(location.state);
+  
+  let {register,formState:{errors},handleSubmit,watch} = useForm({defaultValues:{email:location.state},mode:'onChange'})
   const onsubmit = async (data) =>{
     try {
-      const response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Reset',data)
+      const response = await axios.post(USERS_URLS.RESET,data)
       console.log(response);
       toast.success('password reset successfully')
       navigate('/login')
@@ -37,17 +44,12 @@ export default function ResetPass() {
               <div className="input-group mb-3">
                 <span className="input-group-text" id="basic-addon1"><i className="fa-solid fa-envelope"></i></span>
                 <input type="email"
+                  disabled={true}
                   className="form-control"
                   placeholder="Email"
                   aria-label="Email"
                   aria-describedby="basic-addon1" 
-                  {...register("email",{
-                    required:"email is required",
-                    pattern:{
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message:"email isn't valid" 
-                    }
-                  })}
+                  {...register("email")}
                   />
               </div>
               {errors.email&&(
@@ -60,9 +62,7 @@ export default function ResetPass() {
                   placeholder="OTP"
                   aria-label="otp"
                   aria-describedby="basic-addon1" 
-                  {...register("seed",{
-                    required:"OTP is required",
-                  })}
+                  {...register("seed",OTP_VALIDATION)}
                   />
               </div>
               {errors.seed&&(
@@ -70,16 +70,25 @@ export default function ResetPass() {
               )}
               <div className="input-group mb-3">
                 <span className="input-group-text" id="basic-addon1"><i className="fa-solid fa-lock"></i></span>
-                <input type="password"
+                <input type={isPawwordVisible? "text" : "password"}
                   className="form-control"
                   placeholder="New Password"
                   aria-label="New Password"
                   aria-describedby="basic-addon1" 
-                  {...register("password",{
-                    required:"Password is required",
-                  })}
+                  {...register("password",PASSWORD_VALIDATION)}
+                  
                   />
+                    <button type='button' onMouseDown={(e)=>{
+                      e.preventDefault()
+                    }} onMouseUp={(e)=>{
+                      e.preventDefault()
+                    }} onClick={()=>{
+                      setIsPawwordVisible((prev)=>!prev)
+                    }}>
+                      {isPawwordVisible? <i className='fa-solid fa-eye'></i>:<i className='fa-solid fa-eye-slash'></i>}
+                    </button>
               </div>
+              
               {errors.password&&(
                 <span className="text-danger mb-3">{errors.password.message}</span>
 
@@ -92,8 +101,12 @@ export default function ResetPass() {
                   aria-label="Confirm New Password"
                   aria-describedby="basic-addon1" 
                   {...register("confirmPassword",{
-                    required:"Confirm your password"
-                  })}
+                    ...CONFIRM_PASSWORD,
+                    validate:(confirmPassword)=>{
+                      return confirmPassword === watch("password") ? "" :"password don't match"
+                    }
+                  },
+                  )}
                   />
               </div>
               {errors.confirmPassword&&(

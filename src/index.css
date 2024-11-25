@@ -6,12 +6,15 @@
 .bg-overlay{
     background: linear-gradient(45deg,rgba(47, 140, 96, 0.63),rgba(0, 0, 0, 0.62));
 }
-
+.sidebar-container{
+    background-color: #1F263E;
+    border-top-right-radius: 80px;
+}
 .sidebar-container .ps-sidebar-container{
     background-color: #1F263E;
+    border-top-right-radius: 80px;
     height: 100vh;
     width: 100%;
-    border-radius: 0px 70px 0px 0px;
     overflow: hidden;
 }
 .sidebar-container .ps-menu-button{
@@ -36,5 +39,10 @@
 }
 .header-container{
     background-color: #009247;
-    
+}
+.btn.dropdown-toggle::after {
+    content: none !important;
+}
+.btn.dropdown-toggle {
+    background-image: none !important;
 }

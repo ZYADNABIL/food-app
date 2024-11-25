@@ -10,8 +10,8 @@ export default function SideBar() {
   
   return (
     <>
-    <div className='sidebar-container rounded-3'>
-      <Sidebar collapsed={isCollapsed} >
+    <div className='sidebar-container position-sticky  top-0 left-0'>
+      <Sidebar collapsed={isCollapsed} className='border-0'>
         <Menu>
           <MenuItem onClick={toggleCollapse} className='my-5 menu-logo ms-2 ' icon={<img src={sideLogo} alt="" />}>  </MenuItem>
           <MenuItem component={<Link to={'/dashboard'}/>} icon={<i className="fa-solid fa-house"></i>}>  Home </MenuItem>

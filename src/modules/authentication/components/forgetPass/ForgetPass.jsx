@@ -5,18 +5,21 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { axiosInstance, USERS_URLS } from '../../../../services/Urls/urls'
+import { EMAIL_VALIDATION } from '../../../../services/validation'
 export default function ForgetPass() {
   let navigate = useNavigate()
-  let {register,formState:{errors},handleSubmit} = useForm()
+
+  let {register,formState:{isSubmitting,errors},handleSubmit} = useForm()
   const onSubmit = async (data) =>{
     try {
-      const response = await axios.post('https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request',data)
+      const response = await axiosInstance.post(USERS_URLS.RESET_REQUEST,data)
       console.log(response);
-      toast.success('check your email !')
-      navigate('/reset-pass')
+      toast.success(response?.data?.message || 'check your email !')
+      navigate('/reset-pass',{state:data.email})
     } catch (error) {
       console.log(error);
-      toast.error(response.data.message)
+      toast.error(error.response.data.message)
     }
     
   }
@@ -40,19 +43,15 @@ export default function ForgetPass() {
                  placeholder="Enter your email" 
                  aria-label="email" 
                  aria-describedby="basic-addon1"
-                 {...register("email",{
-                   required:"Email is required",
-                   pattern:{
-                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                     message:"Email isn't valid"
-                   }
-                 })}
+                 {...register("email",EMAIL_VALIDATION)}
                 />
               </div>
               {errors.email&&(
                 <span className="text-danger my-3">{errors.email.message}</span>
               )}
-              <button className='w-100 btn btn-success mt-5'>Submit</button>
+              <button disabled={isSubmitting} className='w-100 btn btn-success mt-5'>
+                {isSubmitting?"Submitting..." : "Submit"}
+                </button>
             </form>
           </div>
         </div>
