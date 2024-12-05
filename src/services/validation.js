@@ -5,9 +5,15 @@ export const EMAIL_VALIDATION = {
       message:"Email isn't valid",
     }                        
    }
-   export const PASSWORD_VALIDATION ={
-    required :"Password is required",                     
-   }
+   export const PASSWORD_VALIDATION = {
+    required: 'Password is required',
+    pattern: {
+      value:
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+      message:
+        'Password must contain uppercase, lowercase, number, and special character',
+    },
+  };
    export const OTP_VALIDATION={
     required:"OTP is required",
   }

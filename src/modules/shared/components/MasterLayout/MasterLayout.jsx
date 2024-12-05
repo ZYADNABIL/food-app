@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Navbar from '../Navbar/Navbar'
 import Header from '../Header/Header'
 import { Outlet } from 'react-router-dom'
-import SideBar from '../Sidebar/Sidebar'
+import SideBar from '../Sidebar/SideBar'
+import { AuthContext } from '../../../../context/AuthContext'
 
-export default function MasterLayout({loginData}) {
+export default function MasterLayout() {
   return (
     <div>
       <div className="d-flex">
         <div ><SideBar /></div>
         <div className="w-100 ">
-          <Navbar loginData={loginData}/>
+          <Navbar/>
           <Outlet/>
         </div>
       </div>

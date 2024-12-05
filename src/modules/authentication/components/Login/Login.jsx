@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import logo from '../../../../assets/imgs/logo.png'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { axiosInstance, USERS_URLS } from '../../../../services/Urls/urls'
 import { EMAIL_VALIDATION, PASSWORD_VALIDATION } from '../../../../services/validation'
-export default function Login({saveLoginData}) {
+import { AuthContext } from '../../../../context/AuthContext'
+export default function Login() {
+  const location = useLocation()
+  let {saveLoginData} = useContext(AuthContext)
   let navigate = useNavigate()
   let {
     register,
     formState:{errors},
     handleSubmit,
-  } = useForm()
+  } = useForm({defaultValues:{email:location.state},mode:'onChange'})
   const onSubmit = async (data) =>{
     try {
       let response = await axiosInstance.post(USERS_URLS.LOGIN,data);

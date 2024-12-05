@@ -16,22 +16,17 @@ import CategoriesList from './modules/categories/components/categoriesList/Categ
 import CategoriesData from './modules/categories/components/categoriesData/CategoriesData'
 import UsersList from './modules/users/components/usersList/UsersList'
 import { ToastContainer } from 'react-toastify'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
+import { Navigate } from 'react-router-dom';
+  
 import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute'
+import ReciepeForm from './modules/reciepes/components/reciepeForm/ReciepeForm'
+import { AuthContext } from './context/AuthContext'
+import FavouriteList from './modules/favourites/components/FavouriteList'
+import VerifyPass from './modules/authentication/components/verify/VerifyPass'
 function App() {
-
- const [loginData, setLoginData] = useState(null)
- const saveLoginData = () =>{
-      let encodedToken = localStorage.getItem("token")
-      let decodedToken = jwtDecode(encodedToken)
-      setLoginData(decodedToken)
- }
- useEffect(()=>{
-  if (localStorage.getItem('token')) {
-    saveLoginData()
-  }
- },[])
+  let {loginData} = useContext(AuthContext)
 
   const routes = createBrowserRouter([
 
@@ -40,28 +35,32 @@ function App() {
       element:<AuthLayout/>,
       errorElement: <NotFound/>,
       children:[
-        {index:true,element:<Login saveLoginData={saveLoginData}/>},
-        {path:'login', element:<Login saveLoginData={saveLoginData}/>},
+        {index:true,element:<Login />},
+        {path:'login', element:<Login />},
         {path:'register', element:<Registeration/>},
         {path:'forget-pass', element:<ForgetPass/>},
         {path:'change-pass', element:<ChangePass/>},
+        {path:'verify-pass', element:<VerifyPass/>},
         {path:'reset-pass', element:<ResetPass/>},
       ]
     },
     {
       path:'Dashboard',
       element:
-      <ProtectedRoute loginData={loginData}>
-        <MasterLayout loginData={loginData}/>
+      <ProtectedRoute>
+        <MasterLayout/>
       </ProtectedRoute>,
       errorElement:<NotFound/>,
       children:[
-      {index:true,element:<Dashboard loginData={loginData}/>},
+      {index:true,element:<Dashboard/>},
       {path:'receipes',element:<ReciepesList/>},
+      // {path:'receipes/new-reciepe',element:<ReciepeForm/>},
+      {path:'receipes/:recipeId',element:<ReciepeForm/>},
       {path:'receipe-data',element:<ReciepesData/>},
-      {path:'categories',element:<CategoriesList/>},
+      {path:'favourites',element: loginData?.userGroup != "SystemUser" ? <Navigate replace to="/Dashboard"/>:  <FavouriteList/> },
+      {path:'categories',element: loginData?.userGroup == "SystemUser" ? <Navigate replace to="/Dashboard" /> : <CategoriesList/> },
       {path:'categorie-data',element:<CategoriesData/>},
-      {path:'users',element:<UsersList/>},
+      {path:'users',element:loginData?.userGroup == "SystemUser" ? <Navigate replace to="/Dashboard" /> : <UsersList/>},
       ]
     }
 

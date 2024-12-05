@@ -13,6 +13,8 @@ import DeleteConfirmation from '../../../shared/components/Deleteconfirmation/De
 import NoData from '../../../shared/components/Nodata/NoData';
 export default function CategoriesList() {
   const [categories, setCategories] = useState([])
+  const [arrayOfPages,setArrayOfPages] = useState([])
+
   const [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
@@ -61,11 +63,11 @@ export default function CategoriesList() {
       toast.error(error)
     }
   }
-  let getCategoriesList = async () => {
+  let getCategoriesList = async (pageNumber,pageSize, name) => {
     try {
-      let response = await axiosInstance.get(CATEGORY_URLS.GET_CATEGORIES, { params: { pageSize: 10, pageNember: 1 } }
-      )
-      setCategories(response.data.data)
+      let response = await axiosInstance.get(CATEGORY_URLS.GET_CATEGORIES, { params: { pageNumber: pageNumber, pageSize: pageSize,name:name } })
+        setArrayOfPages(Array(response.data.totalNumberOfPages).fill().map((_,i)=>i++))
+        setCategories(response.data.data)
     }
     catch (error) {
       console.log(error);
@@ -84,16 +86,25 @@ export default function CategoriesList() {
     }
     handleClose()
   }
+  const getNameValue = (input) =>{
+    getCategoriesList(1,5,input.target.value);
+  }
   useEffect(() => {
     getCategoriesList();
   }, [])
 
   return (
     <>
+    <div className='overflow-hidden'>
       <Header title={"Categories"} description={"You can now add your items that any user can order it from the Application and you can edit"} />
-      <div className='d-flex justify-content-between align-items-center p-4 mx-4'>
+      <div className='d-flex justify-content-between align-items-center p-4 mx-4 '>
         <h5>Categories Table details</h5>
         <button className="btn btn-success" onClick={() => handleShowAdd()}>Add New Category</button>
+      </div>
+      <div className="row">
+        <div className="col-lg-8">
+        <input type="text" placeholder='search here ....' className='form-control ms-5'onChange={getNameValue}/>
+        </div>
       </div>
       <div className="p-4 mx-4">
         {categories.length > 0 ? <table className="table table-striped">
@@ -126,7 +137,13 @@ export default function CategoriesList() {
             )}
           </tbody>
         </table> : <NoData />}
-
+        <nav aria-label="Page navigation example ">
+          <ul className="pagination d-flex justify-content-center align-items-center">
+            {arrayOfPages.map((pageNumber)=>(
+            <li className="page-item" key={pageNumber} onClick={(e)=>{getCategoriesList(pageNumber,4);e.preventDefault()}}><a className="page-link" href="#" >{pageNumber}</a></li>
+            ))}
+          </ul>
+        </nav>
       </div>
       <DeleteConfirmation deleteItem={"category"} deleteFunction={deleteCategory} show={show} handleClose={handleClose} />
       <Modal show={showAdd} onHide={handleCloseAdd} className=''>
@@ -187,6 +204,7 @@ export default function CategoriesList() {
           </div>
         </Modal.Body>
       </Modal>
+    </div>
 
     </>
   )

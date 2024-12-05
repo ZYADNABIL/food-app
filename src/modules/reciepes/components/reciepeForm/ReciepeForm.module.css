@@ -1,0 +1,65 @@
+.header-container{
+    background-color: #F0FFEF;
+    margin-block: 1.375rem;
+    margin-inline: .75rem;
+    padding-block: 5rem;
+    padding-inline: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & .content{
+        max-width: 30rem;
+        span{
+            color: #009247;
+        }
+    }
+}
+.primary-btn{
+    background-color: #009247;
+    color: white;
+    padding-block: .8rem;
+    padding-inline: 3.56rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 8px;
+    transition: .3s;
+    border-color: #009247;
+}
+.primary-btn:hover{
+    background-color: white;
+    color: #009247;
+}
+.cancel-primary-btn{
+    background-color: white;
+    color: #009247;
+    padding-block: .8rem;
+    padding-inline: 3.56rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    transition: .3s;
+    border: 2px solid #009247;
+}
+.cancel-primary-btn:hover{
+    background-color: #009247;
+    color: white;
+}
+.form-container{
+    margin-block: 5rem;
+    margin-inline: 9.5rem;
+    input,select,textarea{
+        width: 100%;
+        background-color: #F7F7F7;
+        margin-bottom: 1rem;
+        &::placeholder{
+            color: #00000033;
+        }
+    }
+    input,select{
+        padding-block: 1rem;
+    }
+}

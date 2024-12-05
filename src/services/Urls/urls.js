@@ -10,6 +10,12 @@ export const USERS_URLS = {
     LOGIN:`/Users/Login`,
     RESET_REQUEST:`/Users/Reset/Request`,
     RESET:`/Users/Reset`,
+    GET_USERS :`/Users/`,
+    CHANGE_PASS:`/Users/ChangePassword`,
+    REGISTER : `/Users/Register`,
+    VERIFY : `/Users/verify`,
+    GET_USER : (id)=> `/Users/${id}`,
+    DELETE_USER :(id)=>`/Users/${id}`,
     GET_USER : (id)=>`/Users/${id}`
 }
 //category urls
@@ -22,5 +28,18 @@ export const CATEGORY_URLS ={
 //reciepes Urls
 export const RECIEPE_URLS ={
     GET_RECIEPES:`/Recipe/`,
-    DELETE_RECIEPE:(id)=>`/Recipe/${id}`
+    GET_RECIEPE: (recipeId)=> `/Recipe/${recipeId}`,
+    CREATE_RECIEPE:`/Recipe/`,
+    DELETE_RECIEPE:(id)=>`/Recipe/${id}`,
+    UPDATE_RECIEPE :(recipeId)=> `/Recipe/${recipeId}`
+}
+//User_reciepes Urls
+export const USER_RECIEPE_URLS ={
+    GET_FAVS:`/userRecipe/`,
+    REMOVE_FROM_FAVS: (recipeId)=> `/userRecipe/${recipeId}`,
+    ADD_TO_FAVS:`/userRecipe/`,
+}
+//tags Urls
+export const TAGS_URLS ={
+    GET_TAGS:`/tag/`
 }
